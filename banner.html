@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	/* 默认样式 */
+	html{overflow-y:scroll;}
+	*{ margin:0; padding:0; font-weight:normal; line-height:100%;}
+	i,em{ font-style:normal;}
+
+	body{ font-size:12px;font-family:"冬青黑体简体中文","微软雅黑","宋体",Arial,sans-serif; overflow:hidden;}
+	a{ text-decoration:none; color:#666666; }
+	li{ list-style:none; }
+	img{ border:none 0; vertical-align:top;}
+	input{ outline:none; border:none; background:none;}
+	input,textarea,select{ margin:0; }					
+	input,textarea{ padding:0;}
+	input::-ms-clear{display:none;}
+	a:hover{color:#ff4400;}
+	.orange-color{color:#ff4400;}
+
+	/* 浮动公共样式 */
+	.left{ float:left; _display:inline; }
+	.right{ float:right; _display:inline; }
+	.clearfix:after{ display:block; content:''; clear:both;}
+	.clearfix{ zoom:1;}
+	.banner{ width:680px; height:400px; margin:100px auto; position: relative; overflow: hidden; }
+	.ul_banner{ position: relative; width:680px; height:400px; }
+	.ul_banner li{width:680px; height:400px;position:  absolute; left:680px; top:0;}
+	.banner p{ width:40px; height:40px;text-decoration: none; position:absolute; top:50%; margin-top:-20px;cursor: pointer; }
+	.ul_banner .li_first{ left:0; }
+	.p_left{ left:0; background: url(images/left_btn.png); }
+	.p_right{ right:0; background: url(images/right_btn.png); }
+	.ol_banner{  height:40px; position: absolute; left:50%; margin-left:-100px; bottom:0;overflow: hidden; }
+	.ol_banner li{ width:30px; height:30px; border-radius: 50%; background:#ccc; margin:5px;float:left; cursor:pointer;}
+	.ol_banner .li_on{ background: #0f0; }
+</style>
+</head>
+<body>
+	<div class="banner" id="banner">
+		<ul id="ul_banner" class="ul_banner">
+			<li class="li_first">
+				<img src="images/banner1.jpg" alt="" />
+			</li>
+			<li>
+				<img src="images/banner2.jpg" alt="" />
+			</li>
+			<li>
+				<img src="images/banner3.jpg" alt="" />
+			</li>
+			<li>
+				<img src="images/banner4.jpg" alt="" />
+			</li>
+			<li>
+				<img src="images/banner5.jpg" alt="" />
+			</li>
+		</ul>
+		<p id="p_left" class="p_left"></p>
+		<p id="p_right" class="p_right"></p>
+		<ol class="ol_banner" id="ol_banner">
+			<li class="li_on"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ol>
+	</div>
+	<script src="js/startMove.js"></script>	
+	<script>
+		
+		var oUl_banner=document.getElementById('ul_banner');
+		var oOl_banner=document.getElementById('ol_banner');
+		var oP_left=document.getElementById('p_left');
+		var oP_right=document.getElementById('p_right');
+		var aLi_ban=oUl_banner.children;
+		var aBtn_ban=oOl_banner.children;
+		var w=oUl_banner.offsetWidth/2;
+		var iNow=0;
+		function next(){
+			startMove(aLi_ban[iNow],{left:-680});
+			iNow++;
+			if(iNow==aLi_ban.length)iNow=0;
+			aLi_ban[iNow].style.left='680px';
+			startMove(aLi_ban[iNow],{left:0});
+		}
+		function prev(){
+			startMove(aLi_ban[iNow],{left:680});
+			iNow--;
+			if(iNow<0)iNow=aLi_ban.length-1;
+			aLi_ban[iNow].style.left='-680px';
+			startMove(aLi_ban[iNow],{left:0});
+		}
+		oP_left.onclick=function(){
+			prev();
+			change(iNow);
+		};
+		oP_right.onclick=function(){
+			next();
+			change(iNow);
+		};
+		function change(index){
+			for(var i=0; i<aBtn_ban.length; i++){
+				aBtn_ban[i].className='';
+			}
+			aBtn_ban[index].className='li_on';
+		}
+		for(var i=0; i<aBtn_ban.length; i++){
+			(function(index){
+				aBtn_ban[index].onclick=function(){
+					if(index==iNow)return;
+					change(index);
+					if(index>iNow){
+						startMove(aLi_ban[iNow],{left:-680});
+						aLi_ban[index].style.left='680px';
+						startMove(aLi_ban[index],{left:0});
+					}else{
+						startMove(aLi_ban[iNow],{left:680});
+						aLi_ban[index].style.left='-680px';
+						startMove(aLi_ban[index],{left:0});
+					}
+					iNow=index;
+				};
+			})(i);
+		}
+	</script>
+</body>
+</html>

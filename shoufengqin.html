@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+	*{ margin:0; padding:0; list-style: none; }
+	ul{ width:600px ; height:300px; margin:100px auto; position: relative; overflow: hidden;}
+	li{ position: absolute; left:0 ;top:0; }
+	img{ width:600px ; height:300px;  }
+	</style>
+	<script type="text/javascript" src="js/startMove.js"></script>
+	<script type="text/javascript">
+		window.onload=function(){
+			var oUl=document.getElementById('ul1');
+			var aLi=oUl.children;
+			var Default=600;
+			var w=40;
+			for(var i=1; i<aLi.length; i++){
+				aLi[i].style.left=Default-w*(aLi.length-i)+'px';
+			}
+			for(var i=0; i<aLi.length; i++){
+				(function(index){
+					aLi[i].onmouseover=function(){
+						for(var i=0; i<aLi.length; i++){
+							if(i<=index){
+								startMove(aLi[i],{left:w*i});
+							}else{
+								startMove(aLi[i],{left:Default-w*(aLi.length-i)});
+							}
+						}
+					}
+				})(i);
+			}
+		};
+	</script>
+</head>
+<body>
+	<ul id="ul1">
+		<li><img src="images/banner1.jpg" alt="" /></li>
+		<li><img src="images/banner2.jpg" alt="" /></li>
+		<li><img src="images/banner3.jpg" alt="" /></li>
+		<li><img src="images/banner4.jpg" alt="" /></li>
+		<li><img src="images/banner5.jpg" alt="" /></li>
+	</ul>
+</body>
+</html>

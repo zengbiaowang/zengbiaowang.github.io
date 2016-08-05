@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="css/bace.css"/>
+	<style>
+	.ul_big{  overflow:hidden; width:366px; margin:0px auto; height:500px; }
+	.ul_big li{ width:100px; height:100px; border:1px solid #ccc; float:left; margin:10px; background:#f00;}
+	.btn_move{ width:80px; height:80px; line-height: 80px; text-align: center; background: #00f;margin:40px auto; border-radius: 50%;cursor: pointer; }
+	</style>
+	<script src="js/startMove.js"></script>
+	<script>
+	window.onload=function(){
+		var oUl_big=document.getElementById('ul_big');
+		var aLi_big=oUl_big.children;
+		var oBtn_move=document.getElementById('btn_move');
+		var aPos=[];
+		var timer=null;
+		var bOK=false;
+		for(var i=0; i<aLi_big.length; i++){
+			aPos[i]={left:aLi_big[i].offsetLeft,top:aLi_big[i].offsetTop};
+		}
+		for(var i=0; i<aLi_big.length; i++){
+			aLi_big[i].style.position='absolute';
+			aLi_big[i].style.left=aPos[i].left+'px';
+			aLi_big[i].style.top=aPos[i].top+'px';
+			aLi_big[i].style.margin=0;
+		}
+		oBtn_move.onmousedown=function(){
+			this.style.background='rgb('+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+')';
+		}
+		oBtn_move.onmouseup=function(){
+			this.style.background='rgb('+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+')';
+		}
+		oBtn_move.onclick=function (){
+			if(bOK)return;
+			var i=0;
+			clearInterval(timer);
+			timer=setInterval(function (){
+				(function (index){
+					bOK=true;
+					startMove(aLi_big[i],{left:0,top:0,width:0,height:0,opacity:0},{complete:function (){
+						if(index==aLi_big.length-1){
+							for(var i=0; i<aLi_big.length; i++){
+								aLi_big[i].style.background='rgb('+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+')';
+							}
+							var i=aLi_big.length-1;
+							timer=setInterval(function (){
+								startMove(aLi_big[i],{left:aPos[i].left,top:aPos[i].top,width:100,height:100,opacity:1});
+								i--;
+								if(i==-1){
+									clearInterval(timer);
+									bOK=false;
+								}
+							},100);
+						}
+					}});
+					i++;
+				})(i);
+				if(i==aLi_big.length){
+					clearInterval(timer);
+				}
+			},100);
+			return false;
+		};
+	};
+	</script>
+</head>
+<body>
+	<p id="btn_move" class="btn_move" >点一下</p>
+	<ul class="ul_big clearfix" id="ul_big">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+</body>
+</html>

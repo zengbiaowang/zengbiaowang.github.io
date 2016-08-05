@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box{width: 100px;height: 100px; background:url(images/pen.png) no-repeat 0 0; position: absolute;top:50%;left:50%;background-size:cover;transform:translateY(-100px);z-index: 999;}
+        input{width:100px;height: 40px;outline:none; cursor: pointer; line-height: 40px; background: #f00;color: #fff;border:none;border-radius: 5px; text-align: center;}
+        .span{ width:5px; height:5px; background:#000; position:absolute;}
+    </style>
+    <script>
+        //存坐标
+        var pos=[];
+        function drag(obj){
+            obj.onmousedown=function(ev){
+                var ev=ev||event;
+                var disX=ev.clientX-obj.offsetLeft;
+                var disY=ev.clientY-obj.offsetTop;
+                pos[0]={l:obj.offsetLeft,t:obj.offsetTop};
+                document.onmousemove=function(ev){
+                    var ev=ev||event;
+                    var x=ev.clientX-disX;
+                    var y=ev.clientY-disY;
+                    obj.style.left=x+"px";
+                    obj.style.top=y+"px";
+                    //不断的存坐标
+                    pos.push({l:x,t:y});
+                    //模拟轨迹 只为演示
+                    var oSpan=document.createElement("span");
+                    oSpan.className="span";
+                    oSpan.style.left=x+"px";
+                    oSpan.style.top=y+"px";
+                    document.body.appendChild(oSpan);
+
+
+                }
+                document.onmouseup=function(){
+                    document.onmouseup=null;
+                    document.onmousemove=null;
+                    obj.releaseCapture&&obj.releaseCapture();
+                }
+                obj.setCapture&&obj.setCapture();
+                return false;
+            }
+        }
+        window.onload=function(){
+            var oBox=document.getElementById("box");
+            var oBtn=document.getElementById("btn");
+            pos[0]={l:oBox.offsetLeft,t:oBox.offsetTop};
+            var timer=null;
+            oBtn.onclick=function(){
+                if(pos.length==1){
+                    return false;
+                }else{
+                    clearInterval(timer);
+                    timer=setInterval(function(){
+                        var last=pos.pop();
+                        oBox.style.left=last.l+"px";
+                        oBox.style.top=last.t+"px";
+                        if(pos.length==1){
+                            clearInterval(timer);
+                            oBox.style.left=oBox.offsetLeft+'px';
+                            oBox.style.top=oBox.offsetTop+'px';
+                            var aSpan=document.getElementsByTagName('span');
+                            while(aSpan.length>0){
+                                document.body.removeChild(aSpan[0]);
+                            }
+                        }
+                    },30);
+                }
+            }
+            drag(oBox);
+        }
+    </script>
+</head>
+<body>
+<input type="button" value="点击回放" id="btn" />
+<div class="box" id="box"></div>
+</body>
+</html>

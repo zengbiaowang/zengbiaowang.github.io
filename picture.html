@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	.pic_box{width:200px;height:400px;position:absolute;left:50%;top:50%;margin:-200px 0 0 -200px;background: url(images/font_bg.png) no-repeat 0 0;background-size:cover;z-index: 5;}
+	.font_box{ width:120px;height:150px;position: absolute;right:50%;top:172px;margin-right:-60px;}
+	.font_box p{ width:30px;height:150px;font-size: 18px;position: absolute;top:0;line-height:1.5em;}
+	.font_box p span{font-weight: bold; }
+	.font_p1{ right:0; }
+	.font_p2{ right:25px; }
+	.font_p3{ right:50px; }
+	.font_p4{ right:75px; }
+	</style>
+	<script>
+	window.onload=function(){	
+		var oFontBox=document.getElementById('font_box');
+		var aFontP=oFontBox.children;
+		function picMove(time){
+			var str1='一花一世界';
+			var str2='一叶一如来';
+			var str3='一砂一极乐';
+			var str4='一笑一尘埃';
+			function createSpan(str,obj){
+				for(var i=0; i<5; i++){
+					var oSpan=document.createElement('span');
+					oSpan.innerHTML=str.charAt(i);
+					oSpan.style.display='none';
+					obj.appendChild(oSpan);
+				}
+			}
+			createSpan(str1,aFontP[0]);
+			createSpan(str2,aFontP[1]);
+			createSpan(str3,aFontP[2]);
+			createSpan(str4,aFontP[3]);
+			setTimeout(function(){
+				var aSpan=oFontBox.getElementsByTagName('span');
+				var n=0;
+				oFontBox.timer=setInterval(function(){
+					aSpan[n].style.display='block';
+					n++;
+					if(n==aSpan.length){
+						clearInterval(oFontBox.timer);
+					}
+				},100);
+			},time);
+		}
+		picMove(2000);
+		function removeSpan(){
+			for(var i=0; i<aFontP.length; i++){
+				aFontP[i].innerHTML='';
+			}
+		}
+	};
+	</script>
+</head>
+<body>			
+	<div class="pic_box">
+		<div class="font_box" id="font_box">
+			<p class="font_p1"></p>
+			<p class="font_p2"></p>
+			<p class="font_p3"></p>
+			<p class="font_p4"></p>
+		</div>	
+	</div>
+</body>
+</html>
