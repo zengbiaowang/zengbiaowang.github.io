@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智能社--http://www.zhinengshe.com</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        body{
+            background: #000;
+        }
+        #ul1{
+            width: 133px;
+            height: 200px;
+            margin: 100px auto;
+            transform: perspective(800px) rotateX(-15deg);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        #ul1 li{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 0 20px #fff;
+            -webkit-box-reflect: below 10px -webkit-linear-gradient(rgba(0,0,0,0) 40%, rgba(0,0,0,.4));
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var oUl=document.querySelector('#ul1');
+
+            var N=11;
+            for(var i=0; i<N; i++){
+                var oLi=document.createElement('li');
+                oLi.style.background='url(img2/'+(i+1)+'.jpg)';
+                // 倒着运动
+                oLi.style.transition='1s all ease '+(N-i)*200+'ms';
+                // 解决transform不生效
+                ;(function(i, oLi){
+                    setTimeout(function(){
+                        oLi.style.transform='perspective(1200px) rotateY('+(360/N*i)+'deg) translateZ(280px)';
+                    }, 0)
+                })(i, oLi);
+                oUl.appendChild(oLi);
+            }
+
+            // 键盘控制
+            var y=0;
+            var x=0;
+            var aLi=oUl.children;
+            var iSpeedX=0;
+            var iSpeedY=0;
+            var lastX=0;
+            var lastY=0;
+            var timer;
+            var bReady=false;
+
+            aLi[0].addEventListener('transitionend', function(){
+                bReady=true;
+
+                change(x, y);
+            }, false);
+            document.onmousedown=function(ev){
+                if(bReady==false)return;
+                clearInterval(timer);
+                var oEvent=ev || event;
+                var disX=oEvent.clientX-y;
+                var disY=oEvent.clientY-x;
+
+                for(var i=0; i<aLi.length; i++){
+                    aLi[i].style.transition='none';
+                }
+                document.onmousemove=function(ev){
+                    var oEvent=ev || event;
+
+                    x=oEvent.clientY-disY;
+                    y=oEvent.clientX-disX;
+
+                    change(x/3, y/3);
+
+                    iSpeedX=oEvent.clientX-lastX;
+                    iSpeedY=oEvent.clientY-lastY;
+                    lastX=oEvent.clientX;
+                    lastY=oEvent.clientY;
+                };
+                document.onmouseup=function(){
+                    document.onmousemove=null;
+                    document.onmouseup=null;
+
+                    timer=setInterval(function(){
+                        x+=iSpeedY;
+                        y+=iSpeedX;
+
+                        iSpeedX*=0.9;
+                        iSpeedY*=0.9;
+
+                        change(x/3, y/3);
+                    }, 30);
+                };
+                return false;
+            };
+
+            function change(x, y){
+                for(var i=0; i<aLi.length; i++){
+                    aLi[i].style.transform='perspective(1200px) rotateX('+-x+'deg) rotateY('+((360/N*i)+y)+'deg) translateZ(280px)';
+
+                    var scale=Math.abs(Math.abs(((360/N*i)+y)%360)-180)/180;
+                    scale<0.3 && (scale=0.3);
+                    aLi[i].style.opacity=scale;
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <ul id="ul1">
+    </ul>
+</body>
+</html>
+
+
+
+
+
+
